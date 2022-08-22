@@ -1,0 +1,48 @@
+---
+- name: Enable Internet service
+  hosts: 192.168.181.18
+  become: true
+  tasks:
+    - name: Installed rpms on servers
+      yum:
+        name: 
+          - firewalld
+          - httpd
+          - mariadb-server
+          - php
+          - php-mysqlnd
+        state: latest
+    
+    - name: Enable Firewalld serices
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Enable httpd 
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Enable mariadb
+      service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Gather web contents 
+      copy:
+        src: /home/student/playbook_basic/index.html
+        dest: /var/www/html/
+        mode: 0644
+
+- name: This is a second Play 
+  hosts: localhost
+  become: false
+  tasks:
+    - name: 
+      uri:
+        url: http://192.168.181.18
+        status_code: 200
+        mode: 0644
